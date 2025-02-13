@@ -1,74 +1,115 @@
+下面是综合所有信息后更新的 `README` 文件，涵盖了项目结构、安装要求、使用方法、和详细的功能说明。
+
+---
 
 # Efficacy and Prognosis Prediction of PARP Inhibitors
 
-This Python application provides a simple graphical user interface (GUI) for predicting the efficacy and prognosis of PARP inhibitors in ovarian cancer patients. The model takes input features from the clinician and outputs the patient's risk level (Low or High).
+This Python application provides a graphical user interface (GUI) to predict the efficacy and prognosis of PARP inhibitors in ovarian cancer patients. It includes two prediction models: one for primary outcomes and another for recurrent outcomes. Both models are based on **LightGBM** and provide a user-friendly way for clinicians to input patient data and receive risk predictions.
+
+## Project Structure
+
+```
+- models/
+  - primary_prediction_model.txt   # Pre-trained LightGBM model for primary prediction
+  - recurrent_prediction_model.txt # Pre-trained LightGBM model for recurrent prediction
+- PARP_efficacy_prediction_GUI_primary_patients.py        # GUI for primary prediction model
+- PARP_efficacy_prediction_GUI_recurrent_patients.py      # GUI for recurrent prediction model
+- README.md                       # Project documentation
+```
 
 ## Requirements
 
-Before running the application, ensure that the following Python packages are installed:
+Before running the application, ensure that the following Python libraries are installed:
 
-- `pandas`
-- `tkinter`
-- `Pillow`
-- `scikit-learn`
+- `pandas` – For handling data.
+- `lightgbm` – For running the pre-trained LightGBM models.
+- `tkinter` – For creating the GUI interface (usually pre-installed with Python).
+- `Pillow` – For image-related functionalities (used in GUI).
 
-You can install them using `pip`:
+You can install the required libraries using `pip`:
 
 ```bash
-pip install pandas pillow scikit-learn
+pip install pandas lightgbm pillow
 ```
 
-`tkinter` is usually pre-installed with Python, but if you are on a system where it's not available, refer to your system’s instructions for installing `tkinter`.
+If `tkinter` is not available on your system, please refer to your system’s installation instructions for `tkinter`.
 
 ## Usage
 
-1. **Model File**: The application requires a trained model file `recurrent_prediction_model.pkl` to make predictions. This model should be a pre-trained classifier (e.g., logistic regression, random forest, etc.) that has been saved using `pickle`. The model should be saved in the `models/` directory within the same directory as this script.
+### 1. **Model Files**:
 
-2. **Running the Application**:
-   - Place your trained model (`recurrent_prediction_model.pkl`) in the `models/` directory.
-   - Run the Python script (`prediction_gui.py`) directly:
-   
-   ```bash
-   python prediction_gui.py
-   ```
-   
-3. **Input Features**: The GUI will prompt the user to enter six features for a patient:
-   - **BRCA/HRD status**
-   - **Total Bile Acids**
-   - **Fibrinogen Concentration**
-   - **Antibody-ABO**
-   - **Thrombin Time**
-   - **PARPi concentration**
+This project contains two pre-trained LightGBM models:
 
-4. **Predicting Risk Level**: After entering the features, click the **Predict** button. The application will display the patient's risk level (Low or High) based on the prediction made by the model.
+- **`primary_prediction_model.txt`**: LightGBM model for predicting primary outcomes (e.g., initial response to PARP inhibitors).
+- **`recurrent_prediction_model.txt`**: LightGBM model for predicting recurrent outcomes (e.g., prognosis after recurrence).
 
-## Code Breakdown
+These model files are stored in the `models/` directory. Ensure that these model files are available in the correct folder.
 
-- **Model Loading**: The trained model is loaded using `pickle.load()`. The model is expected to have a `predict_proba` method that returns the probabilities for the two possible outcomes (Low or High risk).
-  
-- **GUI**: The GUI is built using `Tkinter`. It consists of:
-  - Six input fields where the user enters the feature values.
-  - A **Predict** button that triggers the prediction function.
-  - A label to display the patient's predicted risk level.
+### 2. **Running the Application**:
 
-- **Prediction Logic**: The features inputted by the user are passed to the model, which returns a probability score. If the probability is greater than 50%, the risk level is classified as `High`. Otherwise, it is classified as `Low`.
+The project includes two Python scripts for running the GUI, each tied to a different model:
+
+#### Primary Prediction GUI
+
+This script uses the **primary prediction model** and allows clinicians to input the following features:
+
+- **BRCA/HRD status**
+- **Total Bile Acids**
+- **Fibrinogen Concentration**
+- **Antibody-ABO**
+- **Thrombin Time**
+- **PARPi concentration**
+
+To run this script, execute:
+
+```bash
+python prediction_gui_primary.py
+```
+
+#### Recurrent Prediction GUI
+
+This script uses the **recurrent prediction model** and allows clinicians to input the following features:
+
+- **FBG (Fibrinogen)**
+- **CA-199 (Cancer Antigen 199)**
+- **Ki67**
+- **Glycated Hemoglobin**
+- **IOAA (Insulin-like Growth Factor-1)**
+
+To run this script, execute:
+
+```bash
+python prediction_gui_recurrent.py
+```
+
+Both scripts will open a GUI where users can input the relevant features, click **Predict**, and receive the risk level (Low or High) based on the model’s prediction.
+
+### 3. **How the Prediction Works**:
+
+- The clinician inputs the required features into the GUI.
+- The model processes the input and predicts the probability of a **High** or **Low** risk level based on the given features.
+- If the probability is greater than 50%, the result will be **High risk**; otherwise, it will be classified as **Low risk**.
+- The result is displayed in the GUI, helping clinicians make informed decisions regarding patient care.
 
 ## Example Output
 
-After entering the required features, the GUI will display one of the following messages:
+After entering the required features and clicking **Predict**, the GUI will display one of the following messages based on the model’s prediction:
 
 - **Patient's risk level: Low**
 - **Patient's risk level: High**
 
-## Notes
+## Model Loading
 
-- This tool is intended to assist clinicians in quickly evaluating the risk level of patients based on the provided features.
-- The performance of the model depends on the quality of the trained model file (`recurrent_prediction_model.pkl`).
-  
+Both GUI scripts load the models as follows:
+
+```python
+model = lgb.Booster(model_file='models/primary_prediction_model.txt')  # For primary prediction
+# or
+model = lgb.Booster(model_file='models/recurrent_prediction_model.txt')  # For recurrent prediction
+```
+
+The models are loaded directly from the `models/` folder where they are stored.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-This `README` will guide users on how to set up and use the application, while also providing some context on the model’s functionality and requirements.
