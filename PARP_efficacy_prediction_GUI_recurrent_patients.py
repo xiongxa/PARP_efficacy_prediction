@@ -2,10 +2,10 @@
 import pandas as pd
 import tkinter as tk
 from PIL import ImageGrab
-import pickle
+import lightgbm as lgb
 
 # import model
-model = pickle.load(open('models/recurrent_prediction_model.pkl', 'rb'))
+model = lgb.Booster(model_file='models/recurrent_prediction_model.txt')
 
 # GUI 窗口
 window = tk.Tk()
@@ -13,7 +13,7 @@ window.geometry('500x300')
 window.title("Efficacy and prognosis prediction of PARP inhibitors")
 
 # 特征输入框
-feature_names = ['BRCA/HRD status', 'Tatal Bile Acids', 'Fibrinogen Concentration', 'Antibody-ABO', 'Thrombin Time', 'PARPi']
+feature_names = ['FBG', 'CA-199', 'Ki67', 'Glycated Hemoglobin', 'IOAA']
 input_data = []
 row = 0
 for name in feature_names:
@@ -26,7 +26,7 @@ for name in feature_names:
 # 预测按钮
 def predict():
     features = [float(inp.get()) for inp in input_data]
-    prob = model.predict_proba([features])[0][1] * 100
+    prob = model.predict([features])[0][1] * 100
     risk_level = 'Low' if prob < 0.5 else 'High'
     output_label.config(text=F"Patient's risk level: {risk_level}")
 predict_button = tk.Button(window, text="Predict", command=predict)
