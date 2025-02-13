@@ -1,6 +1,4 @@
-下面是综合所有信息后更新的 `README` 文件，涵盖了项目结构、安装要求、使用方法、和详细的功能说明。
 
----
 
 # Efficacy and Prognosis Prediction of PARP Inhibitors
 
