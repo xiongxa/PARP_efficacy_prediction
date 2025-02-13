@@ -96,7 +96,8 @@ After entering the required features and clicking **Predict**, the GUI will disp
 - **Patient's risk level: Low**
 - **Patient's risk level: High**
 
-![predtion_fig_fl](https://github.com/user-attachments/assets/a4b0aff9-3c5e-4f60-b39a-fe04cf2348e8)
+<img width="933" alt="image" src="https://github.com/user-attachments/assets/1801589b-0cd8-4571-9b75-7fd28147a6fd" />
+
 
 ## Model Loading
 
